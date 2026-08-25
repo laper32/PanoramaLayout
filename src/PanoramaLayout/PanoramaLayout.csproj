@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>PanoramaLayout</AssemblyName>
+    <RootNamespace>PanoramaLayout</RootNamespace>
+    <BuildTimestampUtc>$([System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ'))</BuildTimestampUtc>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AssemblyMetadata Include="BuildTimestampUtc" Value="$(BuildTimestampUtc)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- ModSharp exposes Microsoft.Extensions types from its .NET 10 host. -->
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+
+    <!-- Compile against the public ModSharp API; the server supplies Sharp.Shared at runtime. -->
+    <PackageReference Include="ModSharp.Sharp.Shared"
+                      Version="2.1.137"
+                      PrivateAssets="all"
+                      ExcludeAssets="runtime" />
+  </ItemGroup>
+</Project>

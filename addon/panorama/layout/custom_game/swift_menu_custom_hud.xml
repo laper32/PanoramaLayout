@@ -1,0 +1,12 @@
+<root>
+    <styles>
+        <include src="s2r://panorama/styles/custom_game/swift_menu_custom_hud.vcss_c" />
+    </styles>
+
+    <Panel class="Root">
+        <Panel id="probe" class="Probe">
+            <Label class="Title" text="CUSTOM HUD ONLINE" />
+            <Label class="Body" text="ModSharp created this custom_hud_layout entity." />
+        </Panel>
+    </Panel>
+</root>

@@ -1,0 +1,15 @@
+<root>
+    <styles>
+        <include src="s2r://panorama/styles/custom_game/panorama_layout/welcome.vcss_c" />
+    </styles>
+
+    <Panel class="Root">
+        <Panel id="dialog" class="Dialog Dismissed">
+            <Label id="title" class="Title" text="{s:title_text}" />
+            <Label id="body" class="Body" text="{s:body_text}" />
+            <Button id="dismiss_button" class="DismissButton">
+                <Label class="ButtonText" text="Dismiss" />
+            </Button>
+        </Panel>
+    </Panel>
+</root>
