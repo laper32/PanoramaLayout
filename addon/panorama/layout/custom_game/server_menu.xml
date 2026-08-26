@@ -1,0 +1,98 @@
+<!--
+  Two-page, server-driven Custom HUD menu.
+
+  There is deliberately no Panorama script or onactivate handler. Button ids travel back through
+  CS_UM_CustomHudClicked; the server switches per-player CSS classes and input capture.
+-->
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/custom_game/server_menu.vcss_c" />
+	</styles>
+
+	<Panel class="Root">
+		<Panel id="ServerMenu" class="server-menu">
+			<Panel class="server-menu__header">
+				<Label class="server-menu__eyebrow" text="MODSHARP / CUSTOM HUD" />
+				<Label class="server-menu__title" text="SERVER CONTROL PANEL" />
+				<Label class="server-menu__hint" text="Every transition is confirmed by the server" />
+			</Panel>
+
+			<Panel id="MenuHomePage" class="server-menu__page">
+				<Label class="server-menu__page-title" text="MAIN MENU" />
+
+				<Button id="MenuOpenActions" class="server-menu__button server-menu__button--primary">
+					<Label class="server-menu__button-index" text="01" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="OPEN SERVER ACTIONS" />
+						<Label class="server-menu__button-detail" text="Navigate to the second server-driven page" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text=">" />
+				</Button>
+
+				<Button id="MenuQuickStatus" class="server-menu__button">
+					<Label class="server-menu__button-index" text="02" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="QUICK STATUS" />
+						<Label class="server-menu__button-detail" text="Ask the server for an immediate acknowledgement" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text="+" />
+				</Button>
+
+				<Button id="MenuClose" class="server-menu__button server-menu__button--danger">
+					<Label class="server-menu__button-index" text="03" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="CLOSE MENU" />
+						<Label class="server-menu__button-detail" text="Release mouse input and return to the game" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text="X" />
+				</Button>
+
+				<Label id="MenuHomeResult" class="server-menu__result" text="SERVER ACKNOWLEDGED: READY" />
+			</Panel>
+
+			<Panel id="MenuActionsPage" class="server-menu__page">
+				<Label class="server-menu__page-title" text="SERVER ACTIONS / PAGE 2" />
+
+				<Button id="MenuPrintHello" class="server-menu__button server-menu__button--primary">
+					<Label class="server-menu__button-index" text="A" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="PRINT SERVER MESSAGE" />
+						<Label class="server-menu__button-detail" text="Send an action to ModSharp and print the result" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text="!" />
+				</Button>
+
+				<Button id="MenuToggleAccent" class="server-menu__button">
+					<Label class="server-menu__button-index" text="B" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="TOGGLE CYAN THEME" />
+						<Label class="server-menu__button-detail" text="Apply another per-player server class" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text="*" />
+				</Button>
+
+				<Button id="MenuBack" class="server-menu__button">
+					<Label class="server-menu__button-index" text="C" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="BACK TO MAIN MENU" />
+						<Label class="server-menu__button-detail" text="Return without recreating the layout" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text="&lt;" />
+				</Button>
+
+				<Button id="MenuCloseActions" class="server-menu__button server-menu__button--danger">
+					<Label class="server-menu__button-index" text="D" />
+					<Panel class="server-menu__button-copy">
+						<Label class="server-menu__button-title" text="CLOSE MENU" />
+						<Label class="server-menu__button-detail" text="Release input capture" />
+					</Panel>
+					<Label class="server-menu__button-arrow" text="X" />
+				</Button>
+
+				<Label id="MenuActionResult" class="server-menu__result" text="SERVER RECEIVED THE BUTTON CLICK" />
+			</Panel>
+
+			<Label class="server-menu__footer" text="CHAT: !menu  /  CONSOLE: ms_menu" />
+		</Panel>
+	</Panel>
+</root>

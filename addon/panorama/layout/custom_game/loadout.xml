@@ -1,0 +1,37 @@
+<!--
+  Custom loadout HUD copied from cs2-customhud for the compiled-resource Tool Mode probe.
+
+  This stays inside Valve's server-driven safe subset: Panel and Label only, no scripts and no
+  client events. Every displayed value is supplied by the custom_hud_layout dialog state.
+-->
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/custom_game/loadout.vcss_c" />
+	</styles>
+	<Panel class="Root">
+	<Panel id="Loadout" class="loadout">
+		<Label id="LoadoutName" class="loadout__name" text="{s:pname}" />
+
+		<Panel class="loadout__row">
+			<Label class="loadout__slot" text="PRIMARY" />
+			<Label id="LoadoutPrimary" class="loadout__weapon" text="{s:primary}" />
+		</Panel>
+		<Panel class="loadout__row">
+			<Label class="loadout__slot" text="SECONDARY" />
+			<Label id="LoadoutSecondary" class="loadout__weapon" text="{s:secondary}" />
+		</Panel>
+		<Panel class="loadout__row">
+			<Label class="loadout__slot" text="KNIFE" />
+			<Label id="LoadoutKnife" class="loadout__weapon" text="{s:knife}" />
+		</Panel>
+		<Panel class="loadout__row">
+			<Label class="loadout__slot" text="NADES" />
+			<Label id="LoadoutNades" class="loadout__weapon" text="{s:nades}" />
+		</Panel>
+		<Panel class="loadout__row loadout__row--last">
+			<Label class="loadout__slot" text="ARMOR" />
+			<Label id="LoadoutArmor" class="loadout__weapon" text="{s:armor}" />
+		</Panel>
+	</Panel>
+	</Panel>
+</root>

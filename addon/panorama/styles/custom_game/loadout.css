@@ -1,0 +1,80 @@
+/* Custom loadout HUD copied from cs2-customhud for the Tool Mode probe. */
+
+.loadout
+{
+	flow-children: down;
+	width: 260px;
+	padding: 12px 14px;
+	horizontal-align: right;
+	vertical-align: middle;
+	margin-right: 28px;
+	z-index: 1000;
+	background-color: gradient( linear, 0% 0%, 0% 100%, from( #1e1e1ef2 ), to( #0a0a0af7 ) );
+	border: 1px solid #d8760e66;
+	border-radius: 4px;
+	box-shadow: fill #000000b0 0px 3px 10px 0px;
+	opacity: 1;
+	transform: translateX( 0px );
+	transition-property: opacity, transform;
+	transition-duration: 0.2s;
+	transition-timing-function: ease-out;
+}
+
+.loadout__name
+{
+	color: #d8760e;
+	font-size: 18px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-overflow: ellipsis;
+	margin-bottom: 10px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #ffffff1a;
+}
+
+.loadout.server-class-ok
+{
+	z-index: 10000;
+	border: 3px solid #48ff8a;
+	box-shadow: fill #1aff70a0 0px 0px 14px 0px;
+}
+
+.loadout.server-class-ok .loadout__name
+{
+	color: #48ff8a;
+}
+
+.loadout__row
+{
+	flow-children: right;
+	width: 100%;
+	height: 22px;
+	margin-bottom: 5px;
+}
+
+.loadout__row--last
+{
+	margin-bottom: 0px;
+}
+
+.loadout__slot
+{
+	width: 92px;
+	color: #7d7d7d;
+	font-size: 12px;
+	font-weight: medium;
+	letter-spacing: 1px;
+	vertical-align: center;
+}
+
+.loadout__weapon
+{
+	width: fill-parent-flow( 1.0 );
+	color: #ffffff;
+	font-size: 15px;
+	font-weight: medium;
+	text-align: right;
+	text-overflow: shrink;
+	vertical-align: center;
+}

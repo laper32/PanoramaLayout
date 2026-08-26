@@ -13,12 +13,12 @@ $gameDir = Join-Path $Cs2Root "game\csgo"
 $contentAddon = Join-Path $Cs2Root "content\csgo_addons\$AddonName"
 $gameAddon = Join-Path $Cs2Root "game\csgo_addons\$AddonName"
 
-$sourceLayout = Join-Path $projectRoot "addon\panorama\layout\custom_game\swift_menu_custom_hud.xml"
-$sourceStyle = Join-Path $projectRoot "addon\panorama\styles\custom_game\swift_menu_custom_hud.css"
-$layoutInput = Join-Path $contentAddon "panorama\layout\custom_game\swift_menu_custom_hud.vxml"
-$styleInput = Join-Path $contentAddon "panorama\styles\custom_game\swift_menu_custom_hud.vcss"
-$layoutOutput = Join-Path $gameAddon "panorama\layout\custom_game\swift_menu_custom_hud.vxml_c"
-$styleOutput = Join-Path $gameAddon "panorama\styles\custom_game\swift_menu_custom_hud.vcss_c"
+$sourceLayout = Join-Path $projectRoot "addon\panorama\layout\custom_game\server_menu.xml"
+$sourceStyle = Join-Path $projectRoot "addon\panorama\styles\custom_game\server_menu.css"
+$layoutInput = Join-Path $contentAddon "panorama\layout\custom_game\server_menu.xml"
+$styleInput = Join-Path $contentAddon "panorama\styles\custom_game\server_menu.css"
+$layoutOutput = Join-Path $gameAddon "panorama\layout\custom_game\server_menu.vxml_c"
+$styleOutput = Join-Path $gameAddon "panorama\styles\custom_game\server_menu.vcss_c"
 
 foreach ($requiredFile in @($resourceCompiler, $sourceLayout, $sourceStyle)) {
     if (-not (Test-Path -LiteralPath $requiredFile -PathType Leaf)) {
@@ -76,4 +76,4 @@ Copy-Item -LiteralPath (Join-Path $contentAddon "addoninfo.txt") `
     -Force
 
 Write-Host "Built client Panorama addon: $gameAddon"
-Write-Host "Layout resource: panorama/layout/custom_game/swift_menu_custom_hud.xml"
+Write-Host "Layout resource: panorama/layout/custom_game/server_menu.vxml_c"

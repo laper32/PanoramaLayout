@@ -3,6 +3,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
     <AssemblyName>PanoramaLayout</AssemblyName>
     <RootNamespace>PanoramaLayout</RootNamespace>
     <BuildTimestampUtc>$([System.DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ssZ'))</BuildTimestampUtc>
@@ -18,6 +20,10 @@
 
     <!-- Compile against the public ModSharp API; the server supplies Sharp.Shared at runtime. -->
     <PackageReference Include="ModSharp.Sharp.Shared"
+                      Version="2.1.137"
+                      PrivateAssets="all"
+                      ExcludeAssets="runtime" />
+    <PackageReference Include="ModSharp.Sharp.Modules.CommandCenter.Shared"
                       Version="2.1.137"
                       PrivateAssets="all"
                       ExcludeAssets="runtime" />

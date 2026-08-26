@@ -1,9 +1,12 @@
 # CS2 `custom_hud_layout` 普通客户端能力边界实测
 
+> [!IMPORTANT]
+> **历史版本记录，并包含一项已确认的实验设计缺陷。** 本文记录的是 build 2000891 发布之前的客户端行为；旧 Tool Mode 的 `Addons cannot add layouts` 转储仍是当时 build 的有效证据。但普通客户端自定义负例向动态实体传入 `.xml`，阳性对照传入 `.vxml_c`，没有控制运行时资源名 suffix。2026-08-26 的实验 G 已证明 build 2000891 中 `loadout.vxml_c` 可以由 Tool Mode addon 跨到 `de_dust2` 完整显示，因此本文不能继续用于证明当前地图资源归属边界。新版勘误和端到端证据见[《build 2000891 重测记录》](custom-hud-build-2000891-retest.zh-CN.md)。
+
 测试日期：2026-08-26  
 测试目标：普通、零修改的 CS2 客户端连接运行 ModSharp 的社区服务器，并在任意官图上显示服务器提供的完全自定义 Panorama HUD。
 
-> **结论：截至本次测试所用 CS2 版本，该目标不成立。** 服务端可以动态创建并控制 `custom_hud_layout`，但普通客户端不能加载由 Workshop、MMR 或独立 addon 提供的自定义 VXML/CSS。普通客户端只能使用 Valve 基础游戏中已经存在、且能通过 CustomHud 验证器的少量布局；完全自定义布局属于当前地图内容或受控客户端能力，不是地图无关的社区服务器能力。
+> **本文所测旧 build 的结论：该目标不成立。** 服务端可以动态创建并控制 `custom_hud_layout`，但当时的普通客户端不能加载由 Workshop、MMR 或独立 addon 提供的自定义 VXML/CSS。普通客户端只能使用 Valve 基础游戏中已经存在、且能通过 CustomHud 验证器的少量布局；完全自定义布局在该 build 中属于当前地图内容或受控客户端能力，不是地图无关的社区服务器能力。
 
 这不是“实体能不能创建”的问题，而是“客户端是否信任并允许实例化该布局资源”的问题。
 
@@ -91,7 +94,7 @@ client disallowing panorama layout file creation
 
 三条警告来自客户端，而不是 ModSharp 服务端日志。它们与 E1 同时出现：服务端实体成功存在，客户端布局仍然失败。因此，“服务端成功生成实体”等价于“客户端 UI 成功显示”的说法被同一次测试直接否定。
 
-这里的 `.xml` 与磁盘上的 `.vxml_c` 也不构成路径错误证据。Source 2 在逻辑资源名和编译资源名之间解析；后面的 E4 弹窗明确显示客户端已经定位到对应的 `swift_menu_custom_hud.vxml_c`，然后因为 addon 策略终止，而不是报告 `FILEOPEN` 或资源不存在。
+后续实验已经推翻“`.xml` 与 `.vxml_c` 不构成路径差异”这一解释：动态 `custom_hud_layout` 的运行时 keyvalue 必须引用编译资源名 `.vxml_c`。E4 弹窗确实证明旧 build 的 Tool Mode addon 策略会在已经定位 `_c` 后终止；但 E2 使用 `.xml` 的普通客户端日志不能单独证明资源来源/信任域被拒绝。
 
 服务器挂载 addon 同样不会改变客户端权限。网络连接不会把服务端的资源搜索路径、Tool Mode 状态或 `gameinfo.gi` 设置传给客户端。
 
@@ -170,7 +173,7 @@ Addons cannot add layouts.
 - **不是 ResourceCompiler 失败。** 自定义 XML/CSS 明确得到 `2 compiled, 0 failed`。
 - **不是 Workshop/MMR 没有完成文件传输就能解释全部现象。** 独立本地 addon 中资源确定存在时，加载器仍明确报告 `Addons cannot add layouts`。
 
-剩余的决定性差异是资源的来源/信任域：Valve 基础游戏资源被允许，addon 提供的自定义 layout 被拒绝。
+当时还遗漏了另一个决定性差异：自定义负例使用 `.xml`，Valve 基础阳性对照使用 `.vxml_c`。所以这组 A/B 不能单独把失败归因于资源来源/信任域。对于旧 build，E4 仍独立证明 Tool Mode addon 当时被 `Addons cannot add layouts` 拦截；对于 build 2000891，实验 G 已证明 Tool Mode addon 自定义 layout 跨地图成功。
 
 ## 五、客户端总闸仍然关闭
 
@@ -340,13 +343,15 @@ path=IEntityManager.SpawnEntitySync
 
 ### “Tool Mode 肯定允许所有自定义 Panorama”
 
-错误。实测独立 addon 向 `panorama/layout/custom_game` 添加 VXML 时仍触发致命错误。官方地图工具链中的地图资产是另一种资源归属。
+在本文所测旧 build 中错误：独立 addon 向 `panorama/layout/custom_game` 添加 VXML 时仍触发致命错误。build 2000891 已改变这一前提；新版实验 B/G 分别证明可写 addon 布局和显式挂载 addon 的跨地图 `.vxml_c` 均可运行。
 
 ### “`script_zoo` 能显示，所以官图上的社区服插件也能显示”
 
 错误。`script_zoo` 的 VXML 是地图编译依赖并随地图 VPK 交付；官图没有我们的 VXML 依赖。
 
 ## 十、什么变化可以推翻本文结论
+
+> build 2000891 已经满足下面第 1 项，并同时改变了 addon VPK 白名单和 Panorama 资源类型配置。当前 Tool Mode 跨地图结论已被实验 G 推翻；基础 `game/csgo/panorama` loose-file 已由实验 H 重测成功。只有 packed retail VPK 仍是独立待回归路径。
 
 出现以下任一变化后，应重新测试：
 

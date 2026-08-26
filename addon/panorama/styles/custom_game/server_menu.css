@@ -1,0 +1,213 @@
+/* Two-page Custom HUD menu. All state classes are supplied by the server. */
+
+.Root
+{
+	width: 100%;
+	height: 100%;
+}
+
+.server-menu
+{
+	visibility: collapse;
+	flow-children: down;
+	width: 500px;
+	horizontal-align: center;
+	vertical-align: center;
+	padding: 22px;
+	z-index: 20000;
+	background-color: gradient( linear, 0% 0%, 100% 100%, from( #11151df8 ), to( #07090dfb ) );
+	border: 2px solid #f29b38;
+	border-radius: 5px;
+	box-shadow: fill #000000dd 0px 8px 28px 0px;
+	opacity: 0;
+	transform: translateY( 12px );
+	transition-property: opacity, transform, border, box-shadow;
+	transition-duration: 0.14s;
+	transition-timing-function: ease-out;
+}
+
+.server-menu.is-open
+{
+	visibility: visible;
+	opacity: 1;
+	transform: translateY( 0px );
+}
+
+.server-menu.is-accent
+{
+	border: 3px solid #36e5ff;
+	box-shadow: fill #1ccfe066 0px 0px 24px 0px;
+}
+
+.server-menu__header
+{
+	flow-children: down;
+	width: 100%;
+	margin-bottom: 18px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid #ffffff1c;
+}
+
+.server-menu__eyebrow
+{
+	color: #f29b38;
+	font-size: 12px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	margin-bottom: 4px;
+}
+
+.is-accent .server-menu__eyebrow
+{
+	color: #36e5ff;
+}
+
+.server-menu__title
+{
+	color: #ffffff;
+	font-size: 26px;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+
+.server-menu__hint
+{
+	color: #7f8998;
+	font-size: 13px;
+	margin-top: 4px;
+}
+
+.server-menu__page
+{
+	visibility: collapse;
+	flow-children: down;
+	width: 100%;
+}
+
+.server-menu__page.is-active
+{
+	visibility: visible;
+}
+
+.server-menu__page-title
+{
+	color: #aeb7c4;
+	font-size: 12px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	margin-bottom: 10px;
+}
+
+.server-menu__button
+{
+	flow-children: right;
+	width: 100%;
+	height: 66px;
+	margin-bottom: 8px;
+	padding: 10px 12px;
+	background-color: #ffffff0b;
+	border: 1px solid #ffffff16;
+	border-radius: 3px;
+	transition-property: background-color, border, transform;
+	transition-duration: 0.08s;
+}
+
+.server-menu__button:hover
+{
+	background-color: #f29b3822;
+	border: 1px solid #f29b38aa;
+	transform: translateX( 3px );
+}
+
+.server-menu__button:active
+{
+	background-color: #f29b3844;
+	transform: translateX( 5px );
+}
+
+.is-accent .server-menu__button:hover
+{
+	background-color: #36e5ff22;
+	border: 1px solid #36e5ffbb;
+}
+
+.server-menu__button--danger:hover
+{
+	background-color: #ff415022;
+	border: 1px solid #ff5968bb;
+}
+
+.server-menu__button-index
+{
+	width: 38px;
+	color: #f29b38;
+	font-size: 15px;
+	font-weight: bold;
+	vertical-align: center;
+}
+
+.is-accent .server-menu__button-index
+{
+	color: #36e5ff;
+}
+
+.server-menu__button-copy
+{
+	flow-children: down;
+	width: fill-parent-flow( 1.0 );
+	vertical-align: center;
+}
+
+.server-menu__button-title
+{
+	color: #f4f7fa;
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+.server-menu__button-detail
+{
+	color: #7f8998;
+	font-size: 12px;
+	margin-top: 3px;
+}
+
+.server-menu__button-arrow
+{
+	width: 24px;
+	color: #778190;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: right;
+	vertical-align: center;
+}
+
+.server-menu__result
+{
+	visibility: collapse;
+	width: 100%;
+	margin-top: 5px;
+	padding: 9px 10px;
+	color: #58f28b;
+	font-size: 12px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	background-color: #2cf27212;
+	border-left: 3px solid #58f28b;
+}
+
+.server-menu__result.is-visible
+{
+	visibility: visible;
+}
+
+.server-menu__footer
+{
+	width: 100%;
+	margin-top: 13px;
+	color: #596270;
+	font-size: 11px;
+	letter-spacing: 1px;
+	text-align: center;
+}

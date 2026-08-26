@@ -1,39 +1,45 @@
-# CS2 `custom_hud_layout`：ModSharp 能力边界探针
+# CS2 `custom_hud_layout`: A ModSharp Capability-Boundary Probe
 
-> **实测结论（2026-08-26）：** 早期“客户端 addon + ModSharp 可在任意地图提供完全自定义 HUD”的假设已经被否证。普通零改客户端会拒绝 addon 提供的 VXML；当前模块使用 NuGet 公版 `ModSharp.Sharp.Shared 2.1.137` 和纯实体 API 创建 `custom_hud_layout`，以 Valve 内置的 `panorama/layout/btn_alert.vxml_c` 验证实体与客户端基础布局链路。完整证据与复现记录见 [《普通客户端能力边界实测》](docs/custom-hud-retail-client-boundary.zh-CN.md)。下文中的本地 addon 构建流程仅作为失败路径和开发实验保留，不代表可部署到普通社区服玩家。
+[简体中文](README.zh-CN.md) · [Build 2000891 report](docs/custom-hud-build-2000891-retest.en.md) · [中文重测记录](docs/custom-hud-build-2000891-retest.zh-CN.md) · [Screenshot evidence](docs/evidence/README.md) / [截图证据](docs/evidence/README.zh-CN.md)
 
-这个仓库最初用于验证一种与地图解耦的 Custom HUD 架构：客户端 addon 提供静态 VXML/CSS，ModSharp 在任意当前地图上动态创建 `custom_hud_layout` 网络实体。实测已经证明该架构的“自定义客户端 layout”部分会被普通客户端拒绝；下面的结构图保留为原始假设和失败路径记录。
+> **Current status (2026-08-26, build 2000891): cross-map Tool Mode, locally preinstalled retail-client resources, server-driven state, and complete interaction have all succeeded.** In addition to the six dialog variables and dynamic class demonstrated by `loadout.vxml_c`, this repository now includes a two-page `server_menu.vxml_c`. When a player enters `.menu` (`!menu` and `/menu` are also accepted by CommandCenter), the server enables the menu and input capture only for that slot. Button clicks return to ModSharp through the `CS_UM_CustomHudClicked` receiver; the server then performs page navigation, chat output, theme switching, back, and close actions. The click receiver, `SetHasClassForPlayer`, and `SetInputCaptureEnabled` have all been verified on the current Windows build. Earlier `invalid resource name` errors came from using a source filename on a dynamic entity; runtime references must use the compiled `.vxml_c` resource name. Packed retail VPK content remains distinct from both loose-resource paths and cannot be inferred from these successes. See the [build 2000891 retest report](docs/custom-hud-build-2000891-retest.en.md) for the full correction, experiment index, and evidence.
+>
+> Before build 2000891, the retail client rejected addon VXML while Valve's built-in `btn_alert.vxml_c` could still display. Those older experiments remain valid for the client build on which they were performed. Their original logs, dump hashes, and A/B comparison are preserved in the [retail-client capability-boundary report](docs/custom-hud-retail-client-boundary.zh-CN.md) (Chinese).
+
+This repository tests a map-independent Custom HUD architecture: the client supplies static VXML/CSS, while ModSharp dynamically creates a networked `custom_hud_layout` entity on whatever map is currently running. The architecture now works end to end with an explicitly mounted addon in Tool Mode and with locally preinstalled resources in the retail client's base directory. Packed Workshop/MMR VPK delivery and automatic distribution still require separate verification.
+
+![Server-driven two-page Custom HUD menu](docs/evidence/12-interactive-menu-home.png)
 
 ```text
-客户端 Panorama addon
+Client Panorama addon
 VXML / CSS / images
           │
-          │ 按实体中的逻辑资源路径加载
+          │ loaded from the logical resource path on the entity
           ▼
-custom_hud_layout 网络实体
+networked custom_hud_layout entity
           ▲                       │
           │ dialog variable/class │ buttonId + player
           │                       ▼
-                 ModSharp 游戏模式
+                  ModSharp game mode
 ```
 
-这里没有 Hammer 依赖，也不要求地图预放实体。地图只是游戏模式运行的场景；同一套 UI 可以用于官图或任意社区地图。
+This design has no Hammer dependency and does not require an entity to be baked into the map. The map is merely the scene in which the game mode runs; the same UI can be used on official or community maps.
 
-## 两种服务端控制器
+## Two server-side controllers
 
-Valve 官方 `script_zoo` 展示的是：
+Valve's official `script_zoo` demonstrates:
 
 ```text
-cs_script 服务端 JavaScript → 地图中的 custom_hud_layout → 客户端 UI
+cs_script server-side JavaScript → custom_hud_layout in the map → client UI
 ```
 
-本仓库使用的是：
+This repository uses:
 
 ```text
-ModSharp C# → 动态创建 custom_hud_layout → 客户端 UI
+ModSharp C# → dynamically created custom_hud_layout → client UI
 ```
 
-两者操作的是同一种网络实体。被禁止的是 VXML 内部的 Panorama 客户端脚本和事件，不是服务端 JavaScript。官方声明与示例可在本地 Workshop Tools 内容中查看：
+Both control the same type of networked entity. What is prohibited is Panorama client script and events inside VXML, not server-side JavaScript. The official declaration and examples can be inspected in the local Workshop Tools content:
 
 ```text
 content/csgo/maps/editor/zoo/scripts/setup.js
@@ -42,112 +48,124 @@ content/csgo/maps/editor/zoo/scripts/welcome.css
 content/csgo/maps/editor/zoo/scripts/point_script.d.ts
 ```
 
-## 客户端资源结构
+## Client resource layout
 
-仓库中的客户端源码遵循 Panorama 的资源分层：
+The client sources in this repository follow Panorama's resource hierarchy:
 
 ```text
 addon/
 └─ panorama/
-   ├─ layout/custom_game/panorama_layout/welcome.xml
-   └─ styles/custom_game/panorama_layout/welcome.css
+   ├─ layout/custom_game/
+   │  ├─ loadout.xml
+   │  └─ server_menu.xml
+   └─ styles/custom_game/
+      ├─ loadout.css
+      └─ server_menu.css
 ```
 
-构建时源码会被暂存为 `.vxml`、`.vcss`，再由 Valve 的 `resourcecompiler.exe` 生成：
+`loadout` retains the text-variable, dynamic-class, z-index, and cache probes. `server_menu` is the current two-page interactive scenario. The build script compiles the interactive menu by default.
+
+During a build, the `.xml` and `.css` sources are staged into the addon content directory, then compiled by Valve's `resourcecompiler.exe` into:
 
 ```text
 game/csgo_addons/panorama_layout/
 └─ panorama/
-   ├─ layout/custom_game/panorama_layout/welcome.vxml_c
-   └─ styles/custom_game/panorama_layout/welcome.vcss_c
+   ├─ layout/custom_game/server_menu.vxml_c
+   └─ styles/custom_game/server_menu.vcss_c
 ```
 
-ModSharp 使用的是逻辑资源名，不是仓库源文件名，也不带 `_c`：
+The runtime `layout` keyvalue on `custom_hud_layout` must use the compiled resource name, including the `_c` suffix:
 
 ```text
-panorama/layout/custom_game/panorama_layout/welcome.vxml
+panorama/layout/custom_game/server_menu.vxml_c
 ```
 
-## 编译客户端 addon
+The `.vxml` form commonly seen in Hammer/VMAP authoring is a source dependency name and cannot be copied directly onto a dynamic entity. The most important correction from the build 2000891 retest is that `.vxml` produces `invalid resource name`, while the correct `.vxml_c` resource in the same Tool Mode addon loads successfully after connecting to `de_dust2`.
 
-安装 CS2 Workshop Tools 后运行：
+## Building the client addon
+
+After installing CS2 Workshop Tools, run:
 
 ```powershell
 .\build-addon.ps1 `
     -Cs2Root "D:\game\SteamLibrary\steamapps\common\Counter-Strike Global Offensive"
 ```
 
-脚本会完成以下操作：
+The script:
 
-1. 把 XML/CSS 暂存到 `content/csgo_addons/panorama_layout`。
-2. 生成 addon 所需的 `addoninfo.txt` 与 Panorama preprocessor 配置。
-3. 命令行调用 `resourcecompiler.exe`。
-4. 验证 `.vxml_c` 与 `.vcss_c` 已出现在 `game/csgo_addons/panorama_layout`。
+1. stages XML/CSS under `content/csgo_addons/panorama_layout`;
+2. creates the addon's `addoninfo.txt` and Panorama preprocessor configuration;
+3. invokes `resourcecompiler.exe` from the command line;
+4. verifies that `.vxml_c` and `.vcss_c` exist under `game/csgo_addons/panorama_layout`.
 
-它不会修改 `gameinfo.gi`，也不会启动或关闭 CS2。
+It does not modify `gameinfo.gi`, start CS2, or stop CS2.
 
-## 使用 Tools Mode 客户端连接 MMR 实例
+## Connecting a Tools Mode client to an MMR instance
 
-从 Workshop Tools 选择 `panorama_layout` addon 启动。其启动模型等价于：
+Launch the `panorama_layout` addon from Workshop Tools. Its launch model is equivalent to:
 
 ```text
 cs2.exe -addon panorama_layout -tools
 ```
 
-客户端不安装 ModSharp，也不启动本地 listen server。MMR 负责拉起独立 CS2 服务端、部署 ModSharp 与游戏模式模块，并选择实际运行的地图。
+The client does not install ModSharp or start a local listen server. MMR launches the dedicated CS2 server, deploys ModSharp and the game-mode module, and selects the map that actually runs.
 
-在 Tools Mode 控制台直接连接 MMR 分配的实例：
+Connect directly to the MMR-assigned instance from the Tools Mode console:
 
 ```text
 connect <MMR instance address>
 ```
 
-完整链路是：
+The full path is:
 
 ```text
-Tools 客户端
+Tools client
   -addon panorama_layout
-  └─ 挂载 VXML/CSS
+  └─ mounts VXML/CSS
           │
           │ connect
           ▼
-MMR 独立服务端
-  ├─ 官方图或社区图
+MMR dedicated server
+  ├─ official or community map
   ├─ ModSharp
-  └─ PanoramaLayout/生化模式模块
+  └─ PanoramaLayout/game-mode module
           │
-          └─ 创建 custom_hud_layout 并同步 UI 状态
+          └─ creates custom_hud_layout and synchronizes UI state
 ```
 
-服务端只需要模块和 ModSharp；Panorama VXML/CSS 是客户端资源，不需要为了 UI 改造或绑定服务器当前地图。客户端解析实体中的逻辑资源名时，会从已经挂载的 `panorama_layout` addon 中找到编译资源。
+The server needs only the module and ModSharp. Panorama VXML/CSS are client resources; the server's current map does not need to be modified or bound to the UI. When the client resolves the logical resource name on the entity, it finds the compiled resource in the already mounted `panorama_layout` addon.
 
-## ModSharp 端
+## ModSharp side
 
-核心入口位于 [`PanoramaLayoutPlugin.cs`](src/PanoramaLayout/PanoramaLayoutPlugin.cs)：
+The main entry point is [`PanoramaLayoutPlugin.cs`](src/PanoramaLayout/PanoramaLayoutPlugin.cs):
 
 ```csharp
 var keyValues = new Dictionary<string, KeyValuesVariantValueItem>
 {
     ["origin"] = "0 0 0",
-    ["targetname"] = "panorama_layout_probe",
-    ["layout"] = "panorama/layout/btn_alert.vxml_c",
+    ["targetname"] = "panorama_server_menu",
+    ["layout"] = "panorama/layout/custom_game/server_menu.vxml_c",
 };
 
 var layout = entityManager.SpawnEntitySync("custom_hud_layout", keyValues);
 ```
 
-这与 Swiftly PoC 的 `CreateEntityByDesignerName + DispatchSpawn` 是同一层实体操作。项目只引用 NuGet 公版 API：
+This operates at the same entity layer as the Swiftly proof of concept's `CreateEntityByDesignerName + DispatchSpawn`. The project references only public NuGet APIs:
 
 ```xml
 <PackageReference Include="ModSharp.Sharp.Shared"
                   Version="2.1.137"
                   PrivateAssets="all"
                   ExcludeAssets="runtime" />
+<PackageReference Include="ModSharp.Sharp.Modules.CommandCenter.Shared"
+                  Version="2.1.137"
+                  PrivateAssets="all"
+                  ExcludeAssets="runtime" />
 ```
 
-当前探针只使用上述公版实体接口。它设置实体 keyvalues、生成 `custom_hud_layout`，并通过普通客户端实际出现的 `btn_alert` 橙色底板确认渲染链路。
+Entity creation still uses only those public APIs. The state and interaction layer resolves five CS functions required by the current scenario from [`gamedata/panorama_layout_customhud.jsonc`](gamedata/panorama_layout_customhud.jsonc): `SetDialogVariableString`, `SetHasClass`, `SetHasClassForPlayer`, `SetInputCaptureEnabled`, and `CustomHudClickedReceiver`. The first two retain the existing loadout-probe capabilities. The final three drive per-player visibility, page state, mouse input, and Button callbacks for [`server_menu.xml`](addon/panorama/layout/custom_game/server_menu.xml). These functions synchronize state; they do not distribute or mount the client layout.
 
-构建模块：
+Build the module with:
 
 ```powershell
 dotnet build src\PanoramaLayout\PanoramaLayout.csproj `
@@ -155,23 +173,45 @@ dotnet build src\PanoramaLayout\PanoramaLayout.csproj `
     -o .build\modules\PanoramaLayout
 ```
 
-产物：
+Output:
 
 ```text
 .build/modules/PanoramaLayout/PanoramaLayout.dll
 ```
 
-## 能力边界
+The state probe also requires the gamedata file to be deployed as:
 
-Custom HUD 当前只支持 `Panel`、`Label`、`Image`、`Button` 和 CSS。布局是静态声明式结构，服务端可以：
+```text
+game/sharp/gamedata/panorama_layout_customhud.jsonc
+```
 
-- 设置 dialog variables；
-- 切换 panel CSS classes；
-- 为单个玩家覆盖状态；
-- 开关输入捕获；
-- 接收 Button 点击；
-- 创建或销毁整个 layout 实体。
+The module registers it with `IGameData.Register("panorama_layout_customhud")`. The gamedata must be present before the module loads. DLL hot updates are still delivered to the module's `reload/` subdirectory and consumed by the next map-start event.
 
-客户端不能在布局中运行 Panorama JS，也不能用 `onactivate` 等属性执行代码。CSS transition/animation 仍由客户端渲染。
+## Capability boundaries
 
-Tools Mode 解决的是开发和受控客户端的资源挂载。普通公网玩家不会因为连接 ModSharp 服务器就自动拥有这个 addon；客户端资源的正式分发仍是一个独立部署问题，但与具体运行哪张地图无关。
+Custom HUD currently supports only `Panel`, `Label`, `Image`, `Button`, and CSS. The layout is a static declarative structure. The server can:
+
+- set dialog variables;
+- toggle panel CSS classes;
+- override state for an individual player;
+- enable or disable input capture;
+- receive Button clicks;
+- create or destroy the entire layout entity.
+
+The client cannot run Panorama JS inside the layout or execute code through attributes such as `onactivate`. CSS transitions and animations are still rendered client-side.
+
+This retest verified two server-state channels. All six dialog variables displayed correctly, and `SetHasClass("Loadout", "server-class-ok", true)` caused the client to enter a green activation state that existed only in VCSS. Because the class was not predeclared in the VXML, the visual change is independent end-to-end evidence.
+
+The complex interaction scenario also passed on an actual Windows server. Entering `.menu` in chat opens a two-page menu and enables input capture for the invoking slot; clicking close releases input. Entering `.menu` again also acts as a close toggle. Clicking the first item makes the server switch the `is-active` class between the two page panels. Buttons on the second page can write to chat, show confirmation state, switch to a cyan theme, go back, and close. The click path hooks `CustomHudClickedReceiver` directly and depends on neither the current map's point_script/Pulse graph nor client-side Panorama JS. The default M-key `teammenu` is a client command and does not reach a server-side CommandCenter listener; ordinary users do not need to rebind it and can use `.menu` instead.
+
+The stacking order between Custom HUD and the expanded radar depends on Panorama stacking contexts, selectors, and the exact HUD state. A base `.loadout` rule with `z-index: 1000` was sufficient to alter the order in one experiment. In the class experiment, moving `z-index: 10000` into `.loadout.server-class-ok` made the green panel render consistently above the radar. CSS can address the issue, but no single value should be presented as a permanent guarantee for every HUD combination.
+
+A Custom HUD dynamically created by a remote server in Tool Mode also exhibited process-level resource caching. Recompiling back and forth between a known `4128`-byte faulty VCSS and a known `4174`-byte fixed VCSS did not change the current view. Selecting the resource in Asset Browser and reconnecting after `disconnect` also failed to invalidate the cache. Only a full Tool Mode restart reliably loaded the current VCSS from disk. This result is limited to the tested path and should not be generalized to all map-authoring resources.
+
+Tools Mode confirmed that custom addon VXML/VCSS can escape the VMAP that owns them. A `cs_script_demo_copy` client connected to `de_dust2` on a dedicated server and displayed the complete `loadout.vxml_c` with all six server variables. This result depends on the correct compiled resource name and an explicitly mounted client addon.
+
+The retail-client base-directory loose-file path has also been successfully retested with `.vxml_c`: a client launched without `-tools` or `-addon` can load locally preinstalled custom layout and style resources. This still does not prove that packed retail VPK content works. In a same-day Mapcore Discord exchange supplied by an experiment participant on 2026-08-26, a Valve developer stated that Panorama still had a hard stop for packed addon content outside tools and that a fix was planned. The exchange has no public URL and is retained only as contemporaneous context.
+
+## License
+
+This project is released under the [MIT License](LICENSE).
