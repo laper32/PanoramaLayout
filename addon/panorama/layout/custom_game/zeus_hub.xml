@@ -1,0 +1,90 @@
+<!--
+  ZEUS Hub 使用固定槽位承载服务端文档。
+  客户端不包含脚本、不拼接业务参数；所有 Button id 都只表示一个可见槽位。
+-->
+<root>
+	<styles>
+		<include src="s2r://panorama/styles/custom_game/zeus_hub.vcss_c" />
+	</styles>
+
+	<Panel class="Root">
+		<Panel class="hub-backdrop" />
+		<Panel id="HubRoot" class="hub-root">
+			<Panel class="hub-shell">
+				<Panel class="hub-sidebar">
+					<Panel class="hub-brand">
+						<Panel class="hub-brand__mark"><Label text="Z" /></Panel>
+						<Panel class="hub-brand__copy">
+							<Label class="hub-brand__name" text="ZEUS HUB" />
+							<Label class="hub-brand__eyebrow" text="PANORAMA SYSTEM" />
+						</Panel>
+					</Panel>
+
+					<Panel class="hub-nav">
+						<Button id="HubNav0" class="hub-nav__button"><Label id="HubNavText0" text="{s:text}" /></Button>
+						<Button id="HubNav1" class="hub-nav__button"><Label id="HubNavText1" text="{s:text}" /></Button>
+						<Button id="HubNav2" class="hub-nav__button"><Label id="HubNavText2" text="{s:text}" /></Button>
+						<Button id="HubNav3" class="hub-nav__button"><Label id="HubNavText3" text="{s:text}" /></Button>
+						<Button id="HubNav4" class="hub-nav__button"><Label id="HubNavText4" text="{s:text}" /></Button>
+						<Button id="HubNav5" class="hub-nav__button"><Label id="HubNavText5" text="{s:text}" /></Button>
+						<Button id="HubNav6" class="hub-nav__button"><Label id="HubNavText6" text="{s:text}" /></Button>
+					</Panel>
+
+					<Panel id="HubNavPager" class="hub-nav-pager">
+						<Button id="HubNavPrev" class="hub-pager__button"><Label text="‹" /></Button>
+						<Label id="HubNavPage" class="hub-pager__label" text="{s:text}" />
+						<Button id="HubNavNext" class="hub-pager__button"><Label text="›" /></Button>
+					</Panel>
+
+					<Panel class="hub-server-meta">
+						<Label id="HubServer" class="hub-server-meta__primary" text="{s:text}" />
+						<Label id="HubMode" class="hub-server-meta__line" text="{s:text}" />
+						<Label id="HubMap" class="hub-server-meta__line" text="{s:text}" />
+					</Panel>
+				</Panel>
+
+				<Panel class="hub-main">
+					<Panel class="hub-header">
+						<Panel class="hub-header__copy">
+							<Label id="HubTitle" class="hub-title" text="{s:text}" />
+							<Label id="HubSubtitle" class="hub-subtitle" text="{s:text}" />
+						</Panel>
+						<Label class="hub-live-badge" text="SERVER DRIVEN" />
+					</Panel>
+
+					<Label id="HubStatus" class="hub-status" text="{s:text}" />
+					<Label id="HubFeedback" class="hub-feedback" text="{s:text}" />
+
+					<Panel id="HubContent" class="hub-content">
+						<Label id="HubEmpty" class="hub-empty" text="{s:text}" />
+						<Label id="HubLoading" class="hub-loading" text="{s:text}" />
+
+						<Button id="HubRow0" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle0" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail0" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue0" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow1" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle1" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail1" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue1" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow2" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle2" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail2" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue2" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow3" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle3" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail3" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue3" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow4" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle4" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail4" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue4" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow5" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle5" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail5" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue5" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow6" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle6" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail6" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue6" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow7" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle7" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail7" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue7" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow8" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle8" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail8" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue8" class="hub-row__value" text="{s:text}" /></Button>
+						<Button id="HubRow9" class="hub-row"><Panel class="hub-row__copy"><Label id="HubRowTitle9" class="hub-row__title" text="{s:text}" /><Label id="HubRowDetail9" class="hub-row__detail" text="{s:text}" /></Panel><Label id="HubRowValue9" class="hub-row__value" text="{s:text}" /></Button>
+					</Panel>
+
+					<Panel id="HubRowsPager" class="hub-rows-pager">
+						<Button id="HubRowsPrev" class="hub-pager__button"><Label text="‹" /></Button>
+						<Label id="HubRowsPage" class="hub-pager__label" text="{s:text}" />
+						<Button id="HubRowsNext" class="hub-pager__button"><Label text="›" /></Button>
+					</Panel>
+
+					<Panel class="hub-footer">
+						<Button id="HubBack" class="hub-footer__button"><Label id="HubBackText" text="{s:text}" /></Button>
+						<Panel class="hub-footer__spacer" />
+						<Button id="HubRefresh" class="hub-footer__button"><Label id="HubRefreshText" text="{s:text}" /></Button>
+						<Button id="HubClose" class="hub-footer__button hub-footer__button--danger"><Label id="HubCloseText" text="{s:text}" /></Button>
+					</Panel>
+				</Panel>
+			</Panel>
+		</Panel>
+	</Panel>
+</root>

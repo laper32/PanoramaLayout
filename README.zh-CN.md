@@ -57,13 +57,15 @@ addon/
 └─ panorama/
    ├─ layout/custom_game/
    │  ├─ loadout.xml
-   │  └─ server_menu.xml
+   │  ├─ server_menu.xml
+   │  └─ zeus_hub.xml
    └─ styles/custom_game/
       ├─ loadout.css
-      └─ server_menu.css
+      ├─ server_menu.css
+      └─ zeus_hub.css
 ```
 
-`loadout` 保留文本变量、动态 class、z-index 与缓存实验；`server_menu` 是当前两页交互场景。构建脚本默认编译交互菜单。
+`loadout` 保留文本变量、动态 class、z-index 与缓存实验；`server_menu` 是两页交互探针；`zeus_hub` 是 Zeus 新入口使用的固定槽位布局。构建脚本会编译两个可交互界面的 XML/CSS。
 
 构建时 `.xml` / `.css` 源码会被暂存到 addon content 目录，再由 Valve 的 `resourcecompiler.exe` 生成：
 
@@ -71,7 +73,9 @@ addon/
 game/csgo_addons/panorama_layout/
 └─ panorama/
    ├─ layout/custom_game/server_menu.vxml_c
-   └─ styles/custom_game/server_menu.vcss_c
+   ├─ layout/custom_game/zeus_hub.vxml_c
+   ├─ styles/custom_game/server_menu.vcss_c
+   └─ styles/custom_game/zeus_hub.vcss_c
 ```
 
 `custom_hud_layout` 的运行时 `layout` keyvalue 必须使用编译资源名并保留 `_c`：
@@ -99,6 +103,16 @@ Hammer/VMAP authoring 中常见的 `.vxml` 是源码依赖名，不能直接照�
 4. 验证 `.vxml_c` 与 `.vcss_c` 已出现在 `game/csgo_addons/panorama_layout`。
 
 它不会修改 `gameinfo.gi`，也不会启动或关闭 CS2。
+
+需要同时把编译产物复制到本地 Sharp 测试目录时，传入 `DeployAssetsPath`：
+
+```powershell
+.\build-addon.ps1 `
+    -Cs2Root "C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive" `
+    -DeployAssetsPath "\\wsl.localhost\u2204\home\bone\cs2\game\sharp\assets"
+```
+
+用 Workshop Tools 启动 `panorama_layout` addon 并连接测试服后，在聊天输入 `.hub`（或控制台执行 `ms_hub`）打开 Zeus Hub；再次输入会关闭。当前布局提供 7 个左侧导航槽和 10 个内容槽，所有文案、色调、分页及点击含义都由 Zeus 服务端驱动。
 
 ## 使用 Tools Mode 客户端连接 MMR 实例
 

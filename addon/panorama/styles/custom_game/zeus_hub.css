@@ -1,0 +1,479 @@
+/* ZEUS Hub：原生 Panorama 钢铁面板风格。所有可见状态都由服务器 class 驱动。 */
+
+.Root
+{
+	width: 100%;
+	height: 100%;
+}
+
+.hub-backdrop
+{
+	width: 100%;
+	height: 100%;
+	background-color: #02060a88;
+}
+
+.hub-root
+{
+	visibility: collapse;
+	width: 1120px;
+	height: 680px;
+	horizontal-align: center;
+	vertical-align: center;
+	z-index: 24000;
+	opacity: 0;
+	transform: translateY( 10px );
+	transition-property: opacity, transform;
+	transition-duration: 0.12s;
+	transition-timing-function: ease-out;
+}
+
+.hub-root.is-open
+{
+	visibility: visible;
+	opacity: 1;
+	transform: translateY( 0px );
+}
+
+.hub-shell
+{
+	flow-children: right;
+	width: 100%;
+	height: 100%;
+	background-color: gradient( linear, 0% 0%, 100% 100%, from( #18232dfb ), to( #090e13fd ) );
+	border: 1px solid #65809a66;
+	box-shadow: fill #000000dd 0px 12px 40px 0px;
+}
+
+.hub-sidebar
+{
+	flow-children: down;
+	width: 232px;
+	height: 100%;
+	padding: 22px 16px;
+	background-color: gradient( linear, 0% 0%, 100% 100%, from( #101b25ff ), to( #091117ff ) );
+	border-right: 1px solid #3d536877;
+}
+
+.hub-brand
+{
+	flow-children: right;
+	width: 100%;
+	height: 74px;
+	padding-bottom: 16px;
+	border-bottom: 1px solid #42576b66;
+}
+
+.hub-brand__mark
+{
+	width: 50px;
+	height: 50px;
+	vertical-align: center;
+	background-color: gradient( linear, 0% 0%, 100% 100%, from( #128cff ), to( #0b3d78 ) );
+	border: 1px solid #62b8ff;
+	box-shadow: fill #087be877 0px 0px 15px 0px;
+}
+
+.hub-brand__mark Label
+{
+	horizontal-align: center;
+	vertical-align: center;
+	color: #f6fbff;
+	font-size: 31px;
+	font-weight: bold;
+	text-shadow: 0px 1px 2px 2.0 #00101f;
+}
+
+.hub-brand__copy
+{
+	flow-children: down;
+	width: fill-parent-flow( 1.0 );
+	margin-left: 12px;
+	vertical-align: center;
+}
+
+.hub-brand__name
+{
+	color: #f4f8fb;
+	font-size: 20px;
+	font-weight: bold;
+	letter-spacing: 2px;
+}
+
+.hub-brand__eyebrow
+{
+	margin-top: 3px;
+	color: #4ba8ff;
+	font-size: 10px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+.hub-nav
+{
+	flow-children: down;
+	width: 100%;
+	height: fill-parent-flow( 1.0 );
+	margin-top: 18px;
+}
+
+.hub-nav__button
+{
+	visibility: collapse;
+	width: 100%;
+	height: 46px;
+	margin-bottom: 6px;
+	padding: 0px 14px;
+	background-color: #ffffff08;
+	border-left: 3px solid #00000000;
+	border-top: 1px solid #ffffff08;
+	border-bottom: 1px solid #00000044;
+	transition-property: background-color, border, transform;
+	transition-duration: 0.08s;
+}
+
+.hub-nav__button.is-visible
+{
+	visibility: visible;
+}
+
+.hub-nav__button Label
+{
+	vertical-align: center;
+	color: #9faeba;
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+.hub-nav__button:hover,
+.hub-nav__button.is-active
+{
+	background-color: #167ed533;
+	border-left: 3px solid #2e9cff;
+	transform: translateX( 2px );
+}
+
+.hub-nav__button:hover Label,
+.hub-nav__button.is-active Label
+{
+	color: #f4f9fd;
+}
+
+.hub-nav-pager,
+.hub-rows-pager
+{
+	visibility: collapse;
+	flow-children: right;
+	horizontal-align: center;
+	height: 28px;
+}
+
+.hub-nav-pager.is-visible,
+.hub-rows-pager.is-visible
+{
+	visibility: visible;
+}
+
+.hub-pager__button
+{
+	width: 32px;
+	height: 26px;
+	background-color: #ffffff0d;
+	border: 1px solid #ffffff18;
+}
+
+.hub-pager__button:hover
+{
+	background-color: #1688e544;
+	border: 1px solid #37a6ff;
+}
+
+.hub-pager__button Label,
+.hub-pager__label
+{
+	horizontal-align: center;
+	vertical-align: center;
+	color: #8798a8;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.hub-pager__label
+{
+	width: 52px;
+	text-align: center;
+}
+
+.hub-server-meta
+{
+	flow-children: down;
+	width: 100%;
+	margin-top: 12px;
+	padding-top: 13px;
+	border-top: 1px solid #42576b66;
+}
+
+.hub-server-meta__primary
+{
+	color: #51aaff;
+	font-size: 12px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+.hub-server-meta__line
+{
+	margin-top: 4px;
+	color: #687a8a;
+	font-size: 11px;
+}
+
+.hub-main
+{
+	flow-children: down;
+	width: fill-parent-flow( 1.0 );
+	height: 100%;
+	padding: 22px 26px 18px 26px;
+}
+
+.hub-header
+{
+	flow-children: right;
+	width: 100%;
+	height: 70px;
+	padding-bottom: 14px;
+	border-bottom: 1px solid #58708755;
+}
+
+.hub-header__copy
+{
+	flow-children: down;
+	width: fill-parent-flow( 1.0 );
+}
+
+.hub-title
+{
+	color: #f2f6f9;
+	font-size: 27px;
+	font-weight: bold;
+	letter-spacing: 1px;
+}
+
+.hub-subtitle
+{
+	margin-top: 4px;
+	color: #8294a4;
+	font-size: 13px;
+}
+
+.hub-live-badge
+{
+	vertical-align: center;
+	padding: 6px 10px;
+	color: #58b3ff;
+	font-size: 10px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	background-color: #1178ca22;
+	border: 1px solid #2597ee66;
+}
+
+.hub-status,
+.hub-feedback
+{
+	visibility: collapse;
+	width: 100%;
+	height: 32px;
+	margin-top: 8px;
+	padding: 7px 10px;
+	color: #b9c6d0;
+	font-size: 12px;
+	background-color: #ffffff08;
+	border-left: 3px solid #4d9ddd;
+}
+
+.hub-status.is-visible,
+.hub-feedback.is-visible
+{
+	visibility: visible;
+}
+
+.hub-feedback.tone-success { color: #7ce39b; border-left: 3px solid #50d37a; background-color: #3bc56a12; }
+.hub-feedback.tone-warning { color: #f1c46e; border-left: 3px solid #e5a941; background-color: #e5a94112; }
+.hub-feedback.tone-danger { color: #ff8b81; border-left: 3px solid #f05d50; background-color: #f05d5012; }
+
+.hub-content
+{
+	flow-children: down;
+	width: 100%;
+	height: fill-parent-flow( 1.0 );
+	margin-top: 9px;
+}
+
+.hub-row
+{
+	visibility: collapse;
+	flow-children: right;
+	width: 100%;
+	height: 44px;
+	margin-bottom: 4px;
+	padding: 5px 12px;
+	background-color: #ffffff08;
+	border-left: 3px solid #4c607200;
+	border-top: 1px solid #ffffff0c;
+	border-bottom: 1px solid #00000055;
+	transition-property: background-color, border, transform;
+	transition-duration: 0.07s;
+}
+
+.hub-row.is-visible
+{
+	visibility: visible;
+}
+
+.hub-row.is-action:hover
+{
+	background-color: #1584d92b;
+	border-left: 3px solid #2b9cff;
+	transform: translateX( 2px );
+}
+
+/* Detail 强调键值阅读；Confirm 把首行操作提升为明确的主按钮。 */
+.hub-content.template-detail .hub-row
+{
+	background-color: gradient( linear, 0% 0%, 100% 0%, from( #172532b8 ), to( #10171e88 ) );
+}
+
+.hub-content.template-confirm #HubRow0
+{
+	height: 52px;
+	margin-bottom: 10px;
+	background-color: gradient( linear, 0% 0%, 100% 0%, from( #0d68ad66 ), to( #16344b44 ) );
+	border-top: 1px solid #4daeff55;
+	border-bottom: 1px solid #061421aa;
+}
+
+.hub-row__copy
+{
+	flow-children: down;
+	width: fill-parent-flow( 1.0 );
+	vertical-align: center;
+}
+
+.hub-row__title
+{
+	color: #dce5eb;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.hub-row__detail
+{
+	margin-top: 1px;
+	color: #748797;
+	font-size: 10px;
+}
+
+.hub-row__value
+{
+	max-width: 310px;
+	vertical-align: center;
+	color: #aebbc5;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: right;
+}
+
+.hub-row.tone-primary { border-left: 3px solid #2b9cff; }
+.hub-row.tone-primary .hub-row__value { color: #62b8ff; }
+.hub-row.tone-ct { border-left: 3px solid #3f9dff; }
+.hub-row.tone-ct .hub-row__value { color: #70bdff; }
+.hub-row.tone-t { border-left: 3px solid #d8a441; }
+.hub-row.tone-t .hub-row__value { color: #efc267; }
+.hub-row.tone-success { border-left: 3px solid #50d37a; }
+.hub-row.tone-success .hub-row__value { color: #79e49a; }
+.hub-row.tone-warning { border-left: 3px solid #e5a941; }
+.hub-row.tone-warning .hub-row__value { color: #efc267; }
+.hub-row.tone-danger { border-left: 3px solid #ef5b50; }
+.hub-row.tone-danger .hub-row__value { color: #ff867d; }
+.hub-row.tone-muted { opacity: 0.66; }
+
+.is-disabled
+{
+	opacity: 0.42;
+}
+
+.hub-empty,
+.hub-loading
+{
+	visibility: collapse;
+	horizontal-align: center;
+	vertical-align: center;
+	color: #718392;
+	font-size: 14px;
+	letter-spacing: 1px;
+}
+
+.hub-empty.is-visible,
+.hub-loading.is-visible
+{
+	visibility: visible;
+}
+
+.hub-rows-pager
+{
+	margin-top: 2px;
+}
+
+.hub-footer
+{
+	flow-children: right;
+	width: 100%;
+	height: 42px;
+	margin-top: 8px;
+	padding-top: 8px;
+	border-top: 1px solid #58708755;
+}
+
+.hub-footer__spacer
+{
+	width: fill-parent-flow( 1.0 );
+}
+
+.hub-footer__button
+{
+	height: 32px;
+	min-width: 92px;
+	margin-left: 7px;
+	padding: 0px 16px;
+	background-color: #ffffff0b;
+	border: 1px solid #ffffff1b;
+}
+
+.hub-footer__button Label
+{
+	horizontal-align: center;
+	vertical-align: center;
+	color: #aebbc5;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.hub-footer__button:hover
+{
+	background-color: #1688e533;
+	border: 1px solid #3aa6fa99;
+}
+
+.hub-footer__button--danger:hover
+{
+	background-color: #ef554a2b;
+	border: 1px solid #ef6a60aa;
+}
+
+.hub-root.is-busy .hub-live-badge
+{
+	color: #efc267;
+	border: 1px solid #d8a44188;
+}
