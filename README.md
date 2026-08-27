@@ -163,7 +163,7 @@ This operates at the same entity layer as the Swiftly proof of concept's `Create
                   ExcludeAssets="runtime" />
 ```
 
-Entity creation still uses only those public APIs. The state and interaction layer resolves five CS functions required by the current scenario from [`gamedata/panorama_layout_customhud.jsonc`](gamedata/panorama_layout_customhud.jsonc): `SetDialogVariableString`, `SetHasClass`, `SetHasClassForPlayer`, `SetInputCaptureEnabled`, and `CustomHudClickedReceiver`. The first two retain the existing loadout-probe capabilities. The final three drive per-player visibility, page state, mouse input, and Button callbacks for [`server_menu.xml`](addon/panorama/layout/custom_game/server_menu.xml). These functions synchronize state; they do not distribute or mount the client layout.
+Entity creation still uses only those public APIs. [`gamedata/panorama_layout_customhud.jsonc`](gamedata/panorama_layout_customhud.jsonc) carries six CS addresses: `SetDialogVariableString`, `SetHasClass`, `SetDialogVariableStringForPlayer`, `SetHasClassForPlayer`, `SetInputCaptureEnabled`, and `CustomHudClickedReceiver`. The current ModSharp bridge consumes five of them; the per-player dialog setter is retained as an independently verified upstream reference. The first two preserve the existing loadout-probe capabilities, while the active per-player class, input, and receiver paths drive visibility, page state, mouse input, and Button callbacks for [`server_menu.xml`](addon/panorama/layout/custom_game/server_menu.xml). These functions synchronize state; they do not distribute or mount the client layout.
 
 Build the module with:
 
@@ -211,6 +211,12 @@ A Custom HUD dynamically created by a remote server in Tool Mode also exhibited 
 Tools Mode confirmed that custom addon VXML/VCSS can escape the VMAP that owns them. A `cs_script_demo_copy` client connected to `de_dust2` on a dedicated server and displayed the complete `loadout.vxml_c` with all six server variables. This result depends on the correct compiled resource name and an explicitly mounted client addon.
 
 The retail-client base-directory loose-file path has also been successfully retested with `.vxml_c`: a client launched without `-tools` or `-addon` can load locally preinstalled custom layout and style resources. This still does not prove that packed retail VPK content works. In a same-day Mapcore Discord exchange supplied by an experiment participant on 2026-08-26, a Valve developer stated that Panorama still had a hard stop for packed addon content outside tools and that a fix was planned. The exchange has no public URL and is retained only as contemporaneous context.
+
+## Acknowledgements
+
+- Valve's Workshop Tools `script_zoo` provided the official static Custom HUD baseline.
+- [`cs2-server-plugins/cs2-customhud`](https://gitlab.com/cs2-server-plugins/cs2-customhud) provided the earlier function map and gamedata baseline used by the first probes.
+- [`nicedayzhu/CustomHudProbeSW2`](https://github.com/nicedayzhu/CustomHudProbeSW2) independently validated the dynamic entity, Workshop resource VPK, per-player state, input capture, and native click path on SwiftlyS2. Its author-verified 2026-08-27 Windows patterns were synchronized into this repository's ModSharp gamedata.
 
 ## License
 

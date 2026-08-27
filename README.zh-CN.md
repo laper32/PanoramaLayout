@@ -163,7 +163,7 @@ var layout = entityManager.SpawnEntitySync("custom_hud_layout", keyValues);
                   ExcludeAssets="runtime" />
 ```
 
-实体创建仍只使用上述公版接口。状态与交互层从 [`gamedata/panorama_layout_customhud.jsonc`](gamedata/panorama_layout_customhud.jsonc) 解析当前场景所需的五个 CS 函数：`SetDialogVariableString`、`SetHasClass`、`SetHasClassForPlayer`、`SetInputCaptureEnabled` 和 `CustomHudClickedReceiver`。前两个保留既有 loadout 探针能力；后三个驱动 [`server_menu.xml`](addon/panorama/layout/custom_game/server_menu.xml) 的每玩家可见性、页面状态、鼠标输入和 Button 回传。它们只同步状态，不负责分发或挂载客户端 layout。
+实体创建仍只使用上述公版接口。[`gamedata/panorama_layout_customhud.jsonc`](gamedata/panorama_layout_customhud.jsonc) 现保存六个 CS 地址：`SetDialogVariableString`、`SetHasClass`、`SetDialogVariableStringForPlayer`、`SetHasClassForPlayer`、`SetInputCaptureEnabled` 和 `CustomHudClickedReceiver`。当前 ModSharp 桥接层使用其中五个；per-player dialog setter 作为经上游独立验证的参考一并保留。前两个保留既有 loadout 探针能力，当前启用的每玩家 class、输入与 receiver 路径则驱动 [`server_menu.xml`](addon/panorama/layout/custom_game/server_menu.xml) 的可见性、页面状态、鼠标输入和 Button 回传。它们只同步状态，不负责分发或挂载客户端 layout。
 
 构建模块：
 
@@ -211,6 +211,12 @@ Tool Mode 下由远端服务器动态创建的 Custom HUD 还表现出进程级�
 Tools Mode 已确认能让 addon 自定义 VXML/VCSS 脱离拥有它的 VMAP：`cs_script_demo_copy` 客户端进入独立服务器的 `de_dust2` 后，完整显示 `loadout.vxml_c` 及六个服务器变量。这个结果依赖正确的编译资源名和客户端显式 addon mount。
 
 普通客户端基础目录 loose-file 已经用 `.vxml_c` 重测成功：无 `-tools`、无 `-addon` 的客户端可以加载本地预装的自定义布局和样式。这仍不证明 packed retail VPK 已经可用。实验参与者提供的 2026-08-26 Mapcore Discord 当日对话中，Valve 开发者针对 “packed addon outside of tools” 明确表示 packed VPK 内容进入 Panorama 仍有 hard stop，并计划修复；该材料没有公开链接，因此只作为当日上下文记录。
+
+## 致谢
+
+- Valve Workshop Tools 的 `script_zoo` 提供了官方静态 Custom HUD 基线。
+- [`cs2-server-plugins/cs2-customhud`](https://gitlab.com/cs2-server-plugins/cs2-customhud) 提供了最初几轮探针使用的函数映射与 gamedata 基线。
+- [`nicedayzhu/CustomHudProbeSW2`](https://github.com/nicedayzhu/CustomHudProbeSW2) 在 SwiftlyS2 上独立验证了动态实体、Workshop 资源 VPK、每玩家状态、输入捕获及原生点击链路。本项目已同步其作者于 2026-08-27 验证的 Windows patterns，并转换为 ModSharp gamedata schema。
 
 ## 许可证
 
